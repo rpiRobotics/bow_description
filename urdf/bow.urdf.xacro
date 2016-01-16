@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<robot name="bow" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:arg name="gazebo" default="false"/>
+  <xacro:arg name="pedestal" default="true"/>
+  <!--Ridgeback Base Robot-->
+  <xacro:include filename="$(find bow_description)/urdf/ridgeback.urdf.xacro" />
+  <!-- Baxter Base URDF -->
+  <xacro:include filename="$(find bow_description)/urdf/baxter_base/baxter_base.urdf.xacro">
+    <xacro:arg name="gazebo" value="${gazebo}"/>
+  </xacro:include>
+
+  <!-- Baxter Pedestal -->
+  <xacro:if value="$(arg pedestal)">
+    <xacro:include filename="$(find bow_description)/urdf/pedestal/pedestal.xacro">
+      <!--<xacro:arg name="gazebo" value="${gazebo}"/>-->
+    </xacro:include>
+  </xacro:if>
+
+  <!-- Left End Effector -->
+  <xacro:include filename="$(find bow_description)/urdf/left_end_effector.urdf.xacro" />
+
+  <!-- Right End Effector -->
+  <xacro:include filename="$(find bow_description)/urdf/right_end_effector.urdf.xacro" />
+
+  <joint name="ridgeback_base_to_baxter" type="fixed">
+    <origin rpy="0 0 0" xyz="0.2 0 0.8475" />
+    <parent link="chassis_link" />
+    <child link="base" />
+  </joint>
+
+  <!-- When using the pedistal, fix Baxter to Gazebo world with 'base' frame -->
+  <!--<xacro:if value="$(arg gazebo)">
+    <link name="world"/>
+    <joint name="fixed" type="fixed">
+      <parent link="world"/>
+      <child link="base_link"/>
+    </joint>
+  </xacro:if>-->
+</robot>
